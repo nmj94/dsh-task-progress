@@ -1,7 +1,14 @@
 {
-  "name": "dsh-task-progress",
-  "version": "0.2.0",
+  "name": "dsh-progress-observer",
+  "version": "0.2.1",
   "description": "Ask a second model what a running DeepSeek Harness task is doing.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmj94/dsh-task-progress.git"
+  },
+  "homepage": "https://github.com/nmj94/dsh-task-progress#readme",
+  "bugs": "https://github.com/nmj94/dsh-task-progress/issues",
+  "keywords": ["dsh-plugin", "deepseek-harness", "task-progress"],
   "type": "module",
   "main": "./index.js",
   "exports": {
@@ -30,7 +37,8 @@
     "index.js",
     "progress.js",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "README.en.md"
   ],
   "scripts": {
     "test": "node --test"

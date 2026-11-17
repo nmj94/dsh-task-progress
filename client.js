@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-task-progress',
+  id: 'dsh-progress-observer',
   factory(require) {
     const { createElement: h, useId, useRef, useState } = require('react');
     const slot = 'conversation.input.right';
@@ -181,7 +181,7 @@ window.__ModuleLoader__.load({
     function apply(ctx) {
       ctx.slots.inject(slot, () => ctx.slots.register({
         name: slot,
-        id: 'dsh-task-progress',
+        id: 'dsh-progress-observer',
         order: 50,
         inject: sessionId => ({
           async listModels() {

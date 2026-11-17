@@ -1,12 +1,20 @@
 # DSH 任务进度查询
 
+**简体中文** · [English](README.en.md)
+
 在 DeepSeek Harness 执行任务时，用另一个模型解释当前进度。进度查询与原任务并行运行。
 
-## 安装和使用
+## 安装
 
-1. 从 [GitHub Releases](https://github.com/nmj94/dsh-task-progress/releases/latest) 下载 `dsh-task-progress-0.2.0.tgz`。在 DSH Desktop 打开 **插件 → 添加插件**，输入安装包的绝对路径，安装并启用。已经安装 `0.1.0` 时，先在插件列表卸载旧版。
-2. 在当前会话的输入框工具栏点 **查看进度**。从 DSH 已配置的模型中选择一个查询模型。
-3. 点 **查询进度**。需要更具体的信息时，可以在弹窗里填写问题，例如「现在卡在哪一步？」。
+发行包名为 `dsh-progress-observer`。npm 上的 `dsh-task-progress` 是另一个项目。
+
+1. 从 [GitHub Releases](https://github.com/nmj94/dsh-task-progress/releases/latest) 下载 `dsh-progress-observer-0.2.1.tgz`。
+2. 在 DSH Desktop 打开 **插件 → 添加插件**，输入安装包的绝对路径，安装并启用。若装过本项目的 `0.1.0` 或 `0.2.0`，先在插件列表卸载旧版。
+
+## 使用
+
+1. 在当前会话的输入框工具栏点 **查看进度**。从 DSH 已配置的模型中选择一个查询模型。
+2. 点 **查询进度**。需要更具体的信息时，可以在弹窗里填写问题，例如「现在卡在哪一步？」。
 
 使用斜杠命令时，`/progress --models` 会显示供应商和模型 ID。执行 `/progress --model 供应商/模型`，还可以在后面补充一个问题。
 
