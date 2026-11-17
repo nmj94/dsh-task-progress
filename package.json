@@ -1,7 +1,7 @@
 {
   "name": "dsh-progress-observer",
-  "version": "0.2.1",
-  "description": "Ask a second model what a running DeepSeek Harness task is doing.",
+  "version": "0.3.0",
+  "description": "Ask a model what a running DeepSeek Harness task is doing.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nmj94/dsh-task-progress.git"

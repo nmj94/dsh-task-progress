@@ -77,9 +77,6 @@ window.__ModuleLoader__.load({
     function ProgressButton({ useSession, useProjection, listModels, askProgress }) {
       const running = useSession(session => Boolean(session?.running));
       const selection = useProjection('modelSelection');
-      const activeModel = running
-        ? selection?.lastUsed?.model ?? selection?.next?.model
-        : selection?.next?.model ?? selection?.lastUsed?.model;
       const headingId = useId();
       const dialog = useRef(null);
       const trigger = useRef(null);
@@ -92,12 +89,17 @@ window.__ModuleLoader__.load({
       const [busy, setBusy] = useState(false);
       const [answer, setAnswer] = useState(null);
 
+      const activeSelection = (running ? selection?.lastUsed ?? selection?.next : selection?.next ?? selection?.lastUsed)
+        ?? catalog?.default;
+      const currentRoute = activeSelection ? `${activeSelection.provider}/${activeSelection.model}` : '';
+      const currentName = catalog?.groups.find(group => group.id === activeSelection?.provider)
+        ?.models.find(model => model.id === activeSelection.model)?.name ?? activeSelection?.model;
       const groups = catalog?.groups.map(group => ({
         ...group,
-        models: group.models.filter(model => model.id !== (activeModel ?? catalog.default?.model)),
+        models: group.models.filter(model => `${group.id}/${model.id}` !== currentRoute),
       })).filter(group => group.models.length) ?? [];
       const routes = groups.flatMap(group => group.models.map(model => `${group.id}/${model.id}`));
-      const route = routes.includes(selected) ? selected : '';
+      const route = selected && (selected === currentRoute || routes.includes(selected)) ? selected : currentRoute;
 
       async function refreshCatalog() {
         if (loading.current) return;
@@ -152,23 +154,27 @@ window.__ModuleLoader__.load({
         h('form', { onSubmit: submit },
           h('label', null, '查询模型',
             h('select', {
-              value: route, disabled: !routes.length || busy,
+              value: route, disabled: (!currentRoute && !routes.length) || busy,
               onChange: event => { setSelected(event.target.value); rememberModel(event.target.value); },
-            }, h('option', { value: '' }, '选择另一个模型'), modelOptions)),
+            }, currentRoute
+              ? h('option', { value: currentRoute }, `${currentName}（当前任务）`)
+              : h('option', { value: '', disabled: true }, '选择模型'), modelOptions)),
           catalogError
             ? h('div', { className: 'dsh-task-progress-status' }, '模型列表加载失败。',
               h('button', { type: 'button', className: 'dsh-task-progress-button', onClick: refreshCatalog }, '重试'))
             : !catalog
               ? h('p', { className: 'dsh-task-progress-status', role: 'status' }, '正在加载模型…')
-              : !routes.length
-                ? h('p', { className: 'dsh-task-progress-status' }, '请先在 DSH 的「设置 → 模型」中添加另一个模型。')
+              : !routes.length && !currentRoute
+                ? h('p', { className: 'dsh-task-progress-status' }, '请先在 DSH 的「设置 → 模型」中添加模型。')
                 : null,
           h('label', null, '想问什么（可选）',
             h('textarea', {
               rows: 2, maxLength: 500, value: question, disabled: busy,
               placeholder: '例如：目前卡在哪一步？', onChange: event => setQuestion(event.target.value),
             })),
-          !running && h('p', { className: 'dsh-task-progress-status' }, '当前会话空闲。任务运行时可以查询。'),
+          h('p', { className: 'dsh-task-progress-status' }, running
+            ? '查询会向所选模型发送本轮思考与工具摘录。'
+            : '当前会话空闲。任务运行时可以查询。'),
           h('footer', null, h('button', {
             type: 'submit', className: 'dsh-task-progress-query', disabled: !running || !route || busy,
           }, busy ? '正在查询…' : '查询进度'))),
